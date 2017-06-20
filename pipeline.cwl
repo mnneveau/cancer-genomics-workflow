@@ -33,6 +33,10 @@ inputs:
     cosmic_vcf:
         type: File?
         secondaryFiles: [.tbi]
+    snp:
+        type: File
+    output_file_name:
+        type: string
 outputs:
     final_vcf:
         type: File
@@ -61,6 +65,13 @@ steps:
             known_indels: known_indels
         out:
             [final_bam]
+    concordance:
+        run: concordance/concordance.cwl
+	in: bam_1: align_normal/final_bam
+            bam_2: align_tumor/final_bam
+            reference: reference
+            snp: snp
+            output_file_name: output_file_name
     detect_variants:
         run: detect_variants/detect_variants.cwl
         in:
